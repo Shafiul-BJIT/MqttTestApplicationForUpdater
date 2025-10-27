@@ -43,6 +43,11 @@ namespace MqttTestApplicationForUpdater
 
         private async void tokenSetButton_Click(object sender, EventArgs e)
         {
+            if(ConstantMessage.MqttSubscription == false)
+            {
+                await SubscribeResponse();
+            }
+
             var token = textBox1.Text.ToString();
             JObject json = new JObject
             {
@@ -62,6 +67,11 @@ namespace MqttTestApplicationForUpdater
 
         private async void confirmButton_Click(object sender, EventArgs e)
         {
+            if (ConstantMessage.MqttSubscription == false)
+            {
+                await SubscribeResponse();
+            }
+
             var uuid = textBox2.Text.ToString();
             JObject json = new JObject
             {
@@ -84,6 +94,8 @@ namespace MqttTestApplicationForUpdater
             await MqttManager.SubscribeAsync("meldCX/updater/confirm", NeedUserConfirmation);
             await MqttManager.SubscribeAsync("meldCX/updater/command/response", OnProgressChanged);
             await MqttManager.SubscribeAsync("meldCX/updater/log", OnLogReceived);
+
+            ConstantMessage.MqttSubscription = true;
         }
 
         private Color GetBackgroundColorForCode(string code)
@@ -206,6 +218,11 @@ namespace MqttTestApplicationForUpdater
 
         private async void getUpdaterStatusByUuidButton_Click(object sender, EventArgs e)
         {
+            if (ConstantMessage.MqttSubscription == false)
+            {
+                await SubscribeResponse();
+            }
+
             var uuid = textBox10.Text.ToString();
             JObject json = new JObject
             {
@@ -220,6 +237,11 @@ namespace MqttTestApplicationForUpdater
 
         private async void button2_Click(object sender, EventArgs e)
         {
+            if (ConstantMessage.MqttSubscription == false)
+            {
+                await SubscribeResponse();
+            }
+
             var json = new JObject
             {
                 ["messageCode"] = "updater.package.list",

@@ -24,7 +24,7 @@ namespace MqttTestApplicationForUpdater
         {
             _brokerHost = "192.168.54.241";
             //_brokerHost = "localhost";
-            _brokerPort =  8883;
+            _brokerPort = 8883;
             _username = "sdkmeldcx";
             _password = "SDKmeldCX";
             _clientId = $"UpdaterService_{Environment.MachineName}_{Guid.NewGuid()}";
@@ -71,6 +71,7 @@ namespace MqttTestApplicationForUpdater
                 {
                     Console.WriteLine("successful");
                     // Logger.LogInfo("MQTT connected successfully");
+                    ConstantMessage.MqttSubscription = false;
                     return true;
                 }
                 else
@@ -182,6 +183,7 @@ namespace MqttTestApplicationForUpdater
 
         private static async Task OnConnectionClosed(MqttClientDisconnectedEventArgs e)
         {
+            ConstantMessage.MqttSubscription = false;
             // Logger.LogWarning("MQTT connection closed, attempting reconnect...");
             await Task.Delay(5000); // Wait 5 seconds before reconnect
             await ConnectAsync();
