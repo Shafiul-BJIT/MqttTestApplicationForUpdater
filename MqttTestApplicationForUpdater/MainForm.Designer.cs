@@ -1,6 +1,6 @@
 ﻿namespace MqttTestApplicationForUpdater
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -49,6 +50,9 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.button2 = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
+            this.mqttStatusLabel = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.statusUpdateTimer = new System.Windows.Forms.Timer(this.components);
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -90,21 +94,21 @@
             // 
             // tokenSetButton
             // 
-            this.tokenSetButton.Location = new System.Drawing.Point(1224, 39);
+            this.tokenSetButton.Location = new System.Drawing.Point(1240, 39);
             this.tokenSetButton.Name = "tokenSetButton";
-            this.tokenSetButton.Size = new System.Drawing.Size(89, 40);
+            this.tokenSetButton.Size = new System.Drawing.Size(121, 40);
             this.tokenSetButton.TabIndex = 4;
-            this.tokenSetButton.Text = "Set";
+            this.tokenSetButton.Text = "Set AuthToken";
             this.tokenSetButton.UseVisualStyleBackColor = true;
             this.tokenSetButton.Click += new System.EventHandler(this.tokenSetButton_Click);
             // 
             // confirmButton
             // 
-            this.confirmButton.Location = new System.Drawing.Point(1224, 107);
+            this.confirmButton.Location = new System.Drawing.Point(1240, 107);
             this.confirmButton.Name = "confirmButton";
-            this.confirmButton.Size = new System.Drawing.Size(89, 39);
+            this.confirmButton.Size = new System.Drawing.Size(121, 40);
             this.confirmButton.TabIndex = 5;
-            this.confirmButton.Text = "Confirm";
+            this.confirmButton.Text = "ConfirmBeforeInstall";
             this.confirmButton.UseVisualStyleBackColor = true;
             this.confirmButton.Click += new System.EventHandler(this.confirmButton_Click);
             // 
@@ -165,7 +169,7 @@
             // 
             this.textBox10.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBox10.Location = new System.Drawing.Point(916, 176);
-            this.textBox10.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBox10.Margin = new System.Windows.Forms.Padding(2);
             this.textBox10.Multiline = true;
             this.textBox10.Name = "textBox10";
             this.textBox10.Size = new System.Drawing.Size(302, 41);
@@ -173,12 +177,12 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(1224, 176);
-            this.button1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button1.Location = new System.Drawing.Point(1240, 176);
+            this.button1.Margin = new System.Windows.Forms.Padding(2);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(89, 41);
+            this.button1.Size = new System.Drawing.Size(121, 40);
             this.button1.TabIndex = 14;
-            this.button1.Text = "Get";
+            this.button1.Text = "Get Status By UUID";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.getUpdaterStatusByUuidButton_Click);
             // 
@@ -195,7 +199,7 @@
             // textBox11
             // 
             this.textBox11.Location = new System.Drawing.Point(9, 12);
-            this.textBox11.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBox11.Margin = new System.Windows.Forms.Padding(2);
             this.textBox11.Multiline = true;
             this.textBox11.Name = "textBox11";
             this.textBox11.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
@@ -206,7 +210,7 @@
             // 
             this.textBox12.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBox12.Location = new System.Drawing.Point(916, 261);
-            this.textBox12.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBox12.Margin = new System.Windows.Forms.Padding(2);
             this.textBox12.Multiline = true;
             this.textBox12.Name = "textBox12";
             this.textBox12.Size = new System.Drawing.Size(302, 210);
@@ -220,18 +224,18 @@
             this.panel1.Controls.Add(this.textBox5);
             this.panel1.Controls.Add(this.textBox4);
             this.panel1.Location = new System.Drawing.Point(909, 555);
-            this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(387, 205);
             this.panel1.TabIndex = 18;
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(1224, 261);
+            this.button2.Location = new System.Drawing.Point(1240, 261);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(88, 210);
+            this.button2.Size = new System.Drawing.Size(121, 40);
             this.button2.TabIndex = 19;
-            this.button2.Text = "Get";
+            this.button2.Text = "Get Installed Package Version";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -244,11 +248,41 @@
             this.label4.TabIndex = 20;
             this.label4.Text = "Get Installed Package Version";
             // 
-            // Form1
+            // mqttStatusLabel
+            // 
+            this.mqttStatusLabel.AutoSize = true;
+            this.mqttStatusLabel.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.mqttStatusLabel.ForeColor = System.Drawing.Color.Red;
+            this.mqttStatusLabel.Location = new System.Drawing.Point(1085, -1);
+            this.mqttStatusLabel.Name = "mqttStatusLabel";
+            this.mqttStatusLabel.Size = new System.Drawing.Size(106, 18);
+            this.mqttStatusLabel.TabIndex = 21;
+            this.mqttStatusLabel.Text = "Disconnected";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(997, -1);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(88, 16);
+            this.label5.TabIndex = 22;
+            this.label5.Text = "MQTT Status:";
+            // 
+            // statusUpdateTimer
+            // 
+            this.statusUpdateTimer.Enabled = true;
+            this.statusUpdateTimer.Interval = 1000;
+            this.statusUpdateTimer.Tick += new System.EventHandler(this.statusUpdateTimer_Tick);
+            // 
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1324, 772);
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.ClientSize = new System.Drawing.Size(1364, 772);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.mqttStatusLabel);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.panel1);
@@ -265,8 +299,8 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.textBox1);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.Name = "Form1";
+            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Name = "MainForm";
             this.Text = "Mqtt Panel For WindowsUpdater";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.panel1.ResumeLayout(false);
@@ -299,6 +333,9 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label mqttStatusLabel;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Timer statusUpdateTimer;
     }
 }
 

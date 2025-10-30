@@ -12,11 +12,16 @@ using System.Windows.Forms;
 
 namespace MqttTestApplicationForUpdater
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
-        public Form1()
+        private ToolTip connectionToolTip;
+
+        public MainForm()
         {
             InitializeComponent();
+            // Initialize the tooltip component
+            connectionToolTip = new ToolTip();
+            connectionToolTip.ShowAlways = true;
         }
 
         private async void Form1_Load(object sender, EventArgs e)
@@ -35,15 +40,62 @@ namespace MqttTestApplicationForUpdater
                 // Fallback to default icon if loading fails
                 this.Icon = SystemIcons.Application;
             }
-            
+
+            // Initialize the status before connecting
+            UpdateMqttStatusDisplay();
+
             await MqttManager.ConnectAsync();
             await SubscribeResponse();
             textBox12.Text = "[\"appName1\", \"appName2\"]";
         }
 
+        private void statusUpdateTimer_Tick(object sender, EventArgs e)
+        {
+            UpdateMqttStatusDisplay();
+        }
+
+        private void UpdateMqttStatusDisplay()
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action(UpdateMqttStatusDisplay));
+                return;
+            }
+
+            bool isConnected = MqttManager.IsConnected;
+            bool isReconnecting = MqttManager.IsReconnecting;
+
+            if (isReconnecting)
+            {
+                mqttStatusLabel.Text = "Reconnecting...";
+                mqttStatusLabel.ForeColor = Color.Orange;
+                mqttStatusLabel.Font = new Font("Arial", 11.25F, FontStyle.Bold);
+            }
+            else if (isConnected)
+            {
+                mqttStatusLabel.Text = "Connected";
+                mqttStatusLabel.ForeColor = Color.Green;
+                mqttStatusLabel.Font = new Font("Arial", 11.25F, FontStyle.Bold);
+            }
+            else
+            {
+                mqttStatusLabel.Text = "Disconnected";
+                mqttStatusLabel.ForeColor = Color.Red;
+                mqttStatusLabel.Font = new Font("Arial", 11.25F, FontStyle.Bold);
+            }
+
+            // Update tooltip with detailed connection info
+            string connectionInfo = MqttManager.GetConnectionInfo();
+            if (mqttStatusLabel.Tag == null || !mqttStatusLabel.Tag.Equals(connectionInfo))
+            {
+                mqttStatusLabel.Tag = connectionInfo;
+                connectionToolTip.SetToolTip(mqttStatusLabel, connectionInfo);
+            }
+        }
+
         private async void tokenSetButton_Click(object sender, EventArgs e)
         {
-            if(ConstantMessage.MqttSubscription == false)
+            if (ConstantMessage.MqttSubscription == false)
             {
                 await SubscribeResponse();
             }

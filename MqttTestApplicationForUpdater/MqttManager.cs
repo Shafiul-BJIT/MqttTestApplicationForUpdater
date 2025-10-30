@@ -3,6 +3,7 @@ using System.Configuration;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Linq;
 using MQTTnet;
 using MQTTnet.Client;
 
@@ -18,12 +19,14 @@ namespace MqttTestApplicationForUpdater
         private static readonly string _username;
         private static readonly string _password;
         private static readonly Dictionary<string, Action<string, string>> _messageHandlers;
-        //private static readonly object _lockObject = new object();
+        private static bool _isReconnecting = false;
+        private static int _reconnectAttempts = 0;
+        private static readonly int[] _reconnectDelays = { 1000, 2000, 5000, 10000, 15000, 30000, 60000 }; // Progressive delays up to 60 seconds
+        private static bool _shouldKeepReconnecting = true; // Flag to control continuous reconnection
 
         static MqttManager()
         {
             _brokerHost = "192.168.54.241";
-            //_brokerHost = "localhost";
             _brokerPort = 8883;
             _username = "sdkmeldcx";
             _password = "SDKmeldCX";
@@ -35,56 +38,56 @@ namespace MqttTestApplicationForUpdater
         {
             try
             {
-                //lock (_lockObject)
+                if (_mqttClient != null)
                 {
-                    // Dispose existing connection if any
-                    if (_mqttClient != null)
+                    try
                     {
-                        try
-                        {
-                            _mqttClient.ApplicationMessageReceivedAsync -= OnMessageReceived;
-                            _mqttClient.DisconnectedAsync -= OnConnectionClosed;
-                        }
-                        catch { /* Ignore cleanup errors */ }
-                        _mqttClient = null;
+                        _mqttClient.ApplicationMessageReceivedAsync -= OnMessageReceived;
+                        _mqttClient.DisconnectedAsync -= OnConnectionClosed;
                     }
-
-                    var factory = new MqttFactory();
-                    _mqttClient = factory.CreateMqttClient();
-
-                    _options = new MqttClientOptionsBuilder()
-                        .WithClientId(_clientId)
-                        .WithTcpServer(_brokerHost, _brokerPort)
-                        .WithCredentials(_username, _password)
-                        .WithCleanSession()
-                        .Build();
-
-                    _mqttClient.ApplicationMessageReceivedAsync += OnMessageReceived;
-                    _mqttClient.DisconnectedAsync += OnConnectionClosed;
+                    catch { /* Ignore cleanup errors */ }
+                    _mqttClient = null;
                 }
 
-                // Logger.LogInfo($"broker: {_brokerHost}, port: {_brokerPort}, username: {_username}, pass: {(_password != null ? "[CONFIGURED]" : "[NOT CONFIGURED]")}");
+                var factory = new MqttFactory();
+                _mqttClient = factory.CreateMqttClient();
+
+                _options = new MqttClientOptionsBuilder()
+                    .WithClientId(_clientId)
+                    .WithTcpServer(_brokerHost, _brokerPort)
+                    .WithCredentials(_username, _password)
+                    .WithCleanSession()
+                    .Build();
+
+                _mqttClient.ApplicationMessageReceivedAsync += OnMessageReceived;
+                _mqttClient.DisconnectedAsync += OnConnectionClosed;
 
                 var connectResult = await _mqttClient.ConnectAsync(_options);
 
                 if (connectResult.ResultCode == MqttClientConnectResultCode.Success)
                 {
-                    Console.WriteLine("successful");
-                    // Logger.LogInfo("MQTT connected successfully");
-                    ConstantMessage.MqttSubscription = false;
+                    Console.WriteLine("MQTT connection successful");
+                    _reconnectAttempts = 0; // Reset reconnect attempts on successful connection
+                    ConstantMessage.MqttSubscription = true;
+
+                    // Resubscribe to all previously subscribed topics after reconnection
+                    if (_isReconnecting && _messageHandlers.Count > 0)
+                    {
+                        await ResubscribeToAllTopicsAsync();
+                    }
+
+                    _isReconnecting = false;
                     return true;
                 }
                 else
                 {
-                    Console.WriteLine("error");
-                    // Logger.LogError($"MQTT connection failed with code: {connectResult.ResultCode}");
+                    Console.WriteLine($"MQTT connection error: {connectResult.ResultCode}");
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Connection failed!");
-                // Logger.LogError($"MQTT connection error: {ex.Message}");
+                Console.WriteLine($"MQTT connection failed: {ex.Message}");
                 return false;
             }
         }
@@ -95,10 +98,7 @@ namespace MqttTestApplicationForUpdater
             {
                 if (_mqttClient?.IsConnected == true)
                 {
-                    //lock (_lockObject)
-                    {
-                        _messageHandlers[topic] = messageHandler;
-                    }
+                    _messageHandlers[topic] = messageHandler;
 
                     var subscribeOptions = new MqttTopicFilterBuilder()
                         .WithTopic(topic)
@@ -106,15 +106,19 @@ namespace MqttTestApplicationForUpdater
                         .Build();
 
                     await _mqttClient.SubscribeAsync(subscribeOptions);
-                    // Logger.LogInfo($"Subscribed to topic: {topic}");
+                    Console.WriteLine($"Subscribed to topic: {topic}");
                     return true;
                 }
-                // Logger.LogWarning("Cannot subscribe: MQTT client is not connected");
+                else
+                {
+                    _messageHandlers[topic] = messageHandler;
+                    Console.WriteLine($"Cannot subscribe to {topic}: MQTT client is not connected. Handler stored for future reconnection.");
+                }
                 return false;
             }
             catch (Exception ex)
             {
-                // Logger.LogError($"MQTT subscription error: {ex.Message}");
+                Console.WriteLine($"MQTT subscription error: {ex.Message}");
                 return false;
             }
         }
@@ -125,19 +129,21 @@ namespace MqttTestApplicationForUpdater
             {
                 if (_mqttClient?.IsConnected == true)
                 {
-                    //lock (_lockObject)
-                    {
-                        _messageHandlers.Remove(topic);
-                    }
+                    _messageHandlers.Remove(topic);
                     await _mqttClient.UnsubscribeAsync(topic);
-                    // Logger.LogInfo($"Unsubscribed from topic: {topic}");
+                    Console.WriteLine($"Unsubscribed from topic: {topic}");
                     return true;
+                }
+                else
+                {
+                    _messageHandlers.Remove(topic);
+                    Console.WriteLine($"Handler removed for topic: {topic}");
                 }
                 return false;
             }
             catch (Exception ex)
             {
-                // Logger.LogError($"MQTT unsubscription error: {ex.Message}");
+                Console.WriteLine($"MQTT unsubscription error: {ex.Message}");
                 return false;
             }
         }
@@ -150,14 +156,10 @@ namespace MqttTestApplicationForUpdater
                 string message = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
 
                 Action<string, string> handler = null;
-                //lock (_lockObject)
-                {
-                    _messageHandlers.TryGetValue(topic, out handler);
-                }
+                _messageHandlers.TryGetValue(topic, out handler);
 
                 if (handler != null)
                 {
-                    // Execute handler in a separate task to avoid blocking the MQTT thread
                     await Task.Run(() =>
                     {
                         try
@@ -166,27 +168,111 @@ namespace MqttTestApplicationForUpdater
                         }
                         catch (Exception ex)
                         {
-                            // Logger.LogError($"Error in message handler for topic {topic}: {ex.Message}");
+                            Console.WriteLine($"Error in message handler for topic {topic}: {ex.Message}");
                         }
                     });
                 }
                 else
                 {
-                    // Logger.LogInfo($"No handler found for topic: {topic}");
+                    Console.WriteLine($"No handler found for topic: {topic}");
                 }
             }
             catch (Exception ex)
             {
-                // Logger.LogError($"MQTT message processing error: {ex.Message}");
+                Console.WriteLine($"MQTT message processing error: {ex.Message}");
             }
         }
 
         private static async Task OnConnectionClosed(MqttClientDisconnectedEventArgs e)
         {
             ConstantMessage.MqttSubscription = false;
-            // Logger.LogWarning("MQTT connection closed, attempting reconnect...");
-            await Task.Delay(5000); // Wait 5 seconds before reconnect
-            await ConnectAsync();
+
+            if (_isReconnecting || !_shouldKeepReconnecting)
+                return; // Avoid multiple reconnection attempts or if reconnection is disabled
+
+            _isReconnecting = true;
+
+            Console.WriteLine($"MQTT connection closed. Reason: {e.Reason}");
+
+            // Start continuous reconnection attempts
+            _ = Task.Run(async () => await AttemptReconnectionAsync());
+        }
+
+        private static async Task AttemptReconnectionAsync()
+        {
+            while (_isReconnecting && _shouldKeepReconnecting)
+            {
+                _reconnectAttempts++;
+
+                // Use progressive delays, but cap at the maximum delay
+                int delayIndex = Math.Min(_reconnectAttempts - 1, _reconnectDelays.Length - 1);
+                int delay = _reconnectDelays[delayIndex];
+
+                Console.WriteLine($"Reconnection attempt {_reconnectAttempts} in {delay / 1000} seconds...");
+
+                await Task.Delay(delay);
+
+                // Check if we should still keep trying
+                if (!_shouldKeepReconnecting)
+                {
+                    Console.WriteLine("Reconnection attempts stopped by user request.");
+                    _isReconnecting = false;
+                    return;
+                }
+
+                try
+                {
+                    bool connected = await ConnectAsync();
+                    if (connected)
+                    {
+                        Console.WriteLine($"Reconnection successful after {_reconnectAttempts} attempts!");
+                        return;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Reconnection attempt {_reconnectAttempts} failed: {ex.Message}");
+                }
+
+                // Log progress every 10 attempts to avoid spam
+                if (_reconnectAttempts % 10 == 0)
+                {
+                    Console.WriteLine($"Still attempting to reconnect... ({_reconnectAttempts} attempts so far)");
+                }
+            }
+
+            // This should never be reached unless _shouldKeepReconnecting is set to false
+            Console.WriteLine("Reconnection attempts ended.");
+            _isReconnecting = false;
+        }
+
+        private static async Task ResubscribeToAllTopicsAsync()
+        {
+            var topics = GetSubscribedTopics();
+            if (topics.Length == 0)
+                return;
+
+            Console.WriteLine($"Resubscribing to {topics.Length} topics...");
+
+            foreach (string topic in topics)
+            {
+                try
+                {
+                    var subscribeOptions = new MqttTopicFilterBuilder()
+                        .WithTopic(topic)
+                        .WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.AtLeastOnce)
+                        .Build();
+
+                    await _mqttClient.SubscribeAsync(subscribeOptions);
+                    Console.WriteLine($"Resubscribed to topic: {topic}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to resubscribe to topic {topic}: {ex.Message}");
+                }
+            }
+
+            Console.WriteLine("Resubscription process completed.");
         }
 
         public static async Task<bool> PublishAsync(string topic, string message)
@@ -203,15 +289,14 @@ namespace MqttTestApplicationForUpdater
                         .Build();
 
                     await _mqttClient.PublishAsync(applicationMessage);
-                    // Logger.LogInfo($"Published message to topic: {topic}");
                     return true;
                 }
-                // Logger.LogWarning($"Cannot publish to {topic}: MQTT client is not connected");
+                Console.WriteLine($"Cannot publish to {topic}: MQTT client is not connected");
                 return false;
             }
             catch (Exception ex)
             {
-                // Logger.LogError($"MQTT publish error: {ex.Message}");
+                Console.WriteLine($"MQTT publish error: {ex.Message}");
                 return false;
             }
         }
@@ -220,22 +305,42 @@ namespace MqttTestApplicationForUpdater
         {
             try
             {
-                //lock (_lockObject)
+                _shouldKeepReconnecting = false; // Stop any ongoing reconnection attempts
+                _isReconnecting = false;
+
+                if (_mqttClient != null)
                 {
-                    if (_mqttClient != null)
-                    {
-                        _mqttClient.ApplicationMessageReceivedAsync -= OnMessageReceived;
-                        _mqttClient.DisconnectedAsync -= OnConnectionClosed;
-                        _mqttClient.DisconnectAsync();
-                        _mqttClient = null;
-                    }
-                    _messageHandlers.Clear();
+                    _mqttClient.ApplicationMessageReceivedAsync -= OnMessageReceived;
+                    _mqttClient.DisconnectedAsync -= OnConnectionClosed;
+                    _mqttClient.DisconnectAsync();
+                    _mqttClient = null;
                 }
-                // Logger.LogInfo("MQTT disconnected");
+                _messageHandlers.Clear();
+                Console.WriteLine("MQTT disconnected");
             }
             catch (Exception ex)
             {
-                // Logger.LogError($"MQTT disconnect error: {ex.Message}");
+                Console.WriteLine($"MQTT disconnect error: {ex.Message}");
+            }
+        }
+
+        public static void StopReconnecting()
+        {
+            _shouldKeepReconnecting = false;
+            Console.WriteLine("Reconnection attempts will be stopped.");
+        }
+
+        public static void StartReconnecting()
+        {
+            _shouldKeepReconnecting = true;
+            if (!_isReconnecting && !IsConnected)
+            {
+                Console.WriteLine("Starting reconnection attempts...");
+                _ = Task.Run(async () =>
+                {
+                    _isReconnecting = true;
+                    await AttemptReconnectionAsync();
+                });
             }
         }
 
@@ -247,20 +352,56 @@ namespace MqttTestApplicationForUpdater
             }
         }
 
-        public static string GetConnectionInfo()
+        public static bool IsReconnecting
         {
-            return $"Host: {_brokerHost}, Port: {_brokerPort}, ClientId: {_clientId}, Connected: {IsConnected}";
+            get
+            {
+                return _isReconnecting;
+            }
         }
 
-        // Method to get all subscribed topics (for debugging/monitoring)
+        public static bool ShouldKeepReconnecting
+        {
+            get
+            {
+                return _shouldKeepReconnecting;
+            }
+        }
+
+        public static string GetConnectionInfo()
+        {
+            return $"Host: {_brokerHost}, Port: {_brokerPort}, ClientId: {_clientId}, Connected: {IsConnected}, Reconnecting: {IsReconnecting}, Attempts: {_reconnectAttempts}, KeepReconnecting: {ShouldKeepReconnecting}";
+        }
+
         public static string[] GetSubscribedTopics()
         {
-            //lock (_lockObject)
-            {
-                var topics = new string[_messageHandlers.Count];
-                _messageHandlers.Keys.CopyTo(topics, 0);
-                return topics;
-            }
+            var topics = new string[_messageHandlers.Count];
+            _messageHandlers.Keys.CopyTo(topics, 0);
+            return topics;
+        }
+
+        public static async Task<bool> ForceReconnectAsync()
+        {
+            if (_isReconnecting)
+                return false;
+
+            Console.WriteLine("Manual reconnection triggered...");
+
+            _shouldKeepReconnecting = true;
+            _isReconnecting = true;
+            _reconnectAttempts = 0;
+
+            return await ConnectAsync();
+        }
+
+        public static int GetReconnectAttempts()
+        {
+            return _reconnectAttempts;
+        }
+
+        public static void ResetReconnectAttempts()
+        {
+            _reconnectAttempts = 0;
         }
     }
 }
