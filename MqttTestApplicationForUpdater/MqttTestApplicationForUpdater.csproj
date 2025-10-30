@@ -37,11 +37,11 @@
     </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MQTTnet, Version=4.3.7.1207, Culture=neutral, PublicKeyToken=fdb7629f2e364a63, processorArchitecture=MSIL">
-      <HintPath>..\packages\MQTTnet.4.3.7.1207\lib\net48\MQTTnet.dll</HintPath>
+    <Reference Include="MQTTnet, Version=4.1.4.563, Culture=neutral, PublicKeyToken=fdb7629f2e364a63, processorArchitecture=MSIL">
+      <HintPath>..\packages\MQTTnet.4.1.4.563\lib\net461\MQTTnet.dll</HintPath>
     </Reference>
-    <Reference Include="MQTTnet.Extensions.ManagedClient, Version=4.3.7.1207, Culture=neutral, PublicKeyToken=fdb7629f2e364a63, processorArchitecture=MSIL">
-      <HintPath>..\packages\MQTTnet.Extensions.ManagedClient.4.3.7.1207\lib\net48\MQTTnet.Extensions.ManagedClient.dll</HintPath>
+    <Reference Include="MQTTnet.Extensions.ManagedClient, Version=4.1.4.563, Culture=neutral, PublicKeyToken=fdb7629f2e364a63, processorArchitecture=MSIL">
+      <HintPath>..\packages\MQTTnet.Extensions.ManagedClient.4.1.4.563\lib\net461\MQTTnet.Extensions.ManagedClient.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>

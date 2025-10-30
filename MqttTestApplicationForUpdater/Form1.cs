@@ -218,6 +218,7 @@ namespace MqttTestApplicationForUpdater
 
         private async void getUpdaterStatusByUuidButton_Click(object sender, EventArgs e)
         {
+            this.textBox3.Text = "";
             if (ConstantMessage.MqttSubscription == false)
             {
                 await SubscribeResponse();
