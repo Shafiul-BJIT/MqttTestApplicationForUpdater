@@ -12,19 +12,26 @@ using System.Windows.Forms;
 
 namespace MqttTestApplicationForUpdater
 {
-    public partial class MainForm : Form
+    public partial class UpdaterStatusForm : Form
     {
         private ToolTip connectionToolTip;
+        private Timer statusUpdateTimer;
 
-        public MainForm()
+        public UpdaterStatusForm()
         {
             InitializeComponent();
             // Initialize the tooltip component
             connectionToolTip = new ToolTip();
             connectionToolTip.ShowAlways = true;
+
+            // Initialize and start the status update timer
+            statusUpdateTimer = new Timer();
+            statusUpdateTimer.Interval = 1000; // Update every second
+            statusUpdateTimer.Tick += statusUpdateTimer_Tick;
+            statusUpdateTimer.Start();
         }
 
-        private async void Form1_Load(object sender, EventArgs e)
+        private async void NewForm_Load(object sender, EventArgs e)
         {
             // Load icon from file path (replace "your-icon.ico" with your actual filename)
             try
@@ -248,6 +255,7 @@ namespace MqttTestApplicationForUpdater
             {
                 // The replyTo key exists
                 string replyTo = json["replyTo"]?.ToString();
+                // Process the replyTo value
 
                 if (replyTo == "updater.update.status")
                 {
@@ -316,8 +324,6 @@ namespace MqttTestApplicationForUpdater
             ResetCommonActivity(message);
         }
 
-
-
         public void NeedUserConfirmation(string topic, string message)
         {
             var json = JObject.Parse(message);
@@ -337,7 +343,7 @@ namespace MqttTestApplicationForUpdater
             }
         }
 
-        private async void getUpdaterStatusByUuidButton_Click(object sender, EventArgs e)
+        private async void button1_Click(object sender, EventArgs e)
         {
             this.textBox13.Text = "";
             if (ConstantMessage.MqttSubscription == false)
@@ -359,6 +365,8 @@ namespace MqttTestApplicationForUpdater
 
         private async void button2_Click(object sender, EventArgs e)
         {
+            this.textBox14.Text = "";
+
             if (ConstantMessage.MqttSubscription == false)
             {
                 await SubscribeResponse();
@@ -369,7 +377,8 @@ namespace MqttTestApplicationForUpdater
                 ["messageCode"] = "updater.package.list",
                 ["data"] = new JObject
                 {
-                    ["packages"] = JArray.Parse(textBox12.Text.ToString())
+                    ["packages"] = JArray.Parse(textBox12.Text.ToString()),
+                    ["deviceid"] = textBox15.Text.ToString()
                 }
             };
             await MqttManager.PublishAsync("meldCX/updater/command", json.ToString());
