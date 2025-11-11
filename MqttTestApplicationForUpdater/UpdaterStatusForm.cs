@@ -53,7 +53,7 @@ namespace MqttTestApplicationForUpdater
 
             await MqttManager.ConnectAsync();
             await SubscribeResponse();
-            textBox12.Text = "[\"appName1\", \"appName2\"]";
+            textBoxPackages.Text = "[\"appName1\", \"appName2\"]";
         }
 
         private void statusUpdateTimer_Tick(object sender, EventArgs e)
@@ -107,7 +107,7 @@ namespace MqttTestApplicationForUpdater
                 await SubscribeResponse();
             }
 
-            var token = textBox1.Text.ToString();
+            var token = textBox_Token.Text.ToString();
             JObject json = new JObject
             {
                 ["replyTo"] = "security.auth",
@@ -131,7 +131,7 @@ namespace MqttTestApplicationForUpdater
                 await SubscribeResponse();
             }
 
-            var uuid = textBox2.Text.ToString();
+            var uuid = textBox_UUID.Text.ToString();
             JObject json = new JObject
             {
                 ["replyTo"] = "updater.update.confirm",
@@ -217,7 +217,7 @@ namespace MqttTestApplicationForUpdater
             var json = JObject.Parse(message);
 
             var status = json["data"]?["status"]?.ToString() ?? "unknown";
-            UpdateTextBoxWithCodeAndColor(textBox9, status);
+            UpdateTextBoxWithCodeAndColor(textBoxOverallStatus, status);
 
             int appCount = json["data"]?["packageStatus"]?.Count() ?? 0;
             if (appCount >= 1)
@@ -272,13 +272,13 @@ namespace MqttTestApplicationForUpdater
         {
             var json = JObject.Parse(message);
 
-            if (textBox13.InvokeRequired)
+            if (textBoxStatusbyUUID.InvokeRequired)
             {
-                textBox13.Invoke(new Action(() => textBox13.Text = json.ToString()));
+                textBoxStatusbyUUID.Invoke(new Action(() => textBoxStatusbyUUID.Text = json.ToString()));
             }
             else
             {
-                textBox13.Text = json.ToString();
+                textBoxStatusbyUUID.Text = json.ToString();
             }
 
             ResetProgressBoxColor();
@@ -291,13 +291,13 @@ namespace MqttTestApplicationForUpdater
         {
             var json = JObject.Parse(message);
 
-            if (textBox14.InvokeRequired)
+            if (textBoxPackageResponse.InvokeRequired)
             {
-                textBox14.Invoke(new Action(() => textBox14.Text = json.ToString()));
+                textBoxPackageResponse.Invoke(new Action(() => textBoxPackageResponse.Text = json.ToString()));
             }
             else
             {
-                textBox14.Text = json.ToString();
+                textBoxPackageResponse.Text = json.ToString();
             }
 
             ResetProgressBoxColor();
@@ -310,13 +310,13 @@ namespace MqttTestApplicationForUpdater
         {
             var json = JObject.Parse(message);
 
-            if (textBox3.InvokeRequired)
+            if (textBoxRealTimeProgress.InvokeRequired)
             {
-                textBox3.Invoke(new Action(() => textBox3.Text = json.ToString()));
+                textBoxRealTimeProgress.Invoke(new Action(() => textBoxRealTimeProgress.Text = json.ToString()));
             }
             else
             {
-                textBox3.Text = json.ToString();
+                textBoxRealTimeProgress.Text = json.ToString();
             }
 
             ResetProgressBoxColor();
@@ -332,26 +332,26 @@ namespace MqttTestApplicationForUpdater
 
             if (uuid != null)
             {
-                if (textBox2.InvokeRequired)
+                if (textBox_UUID.InvokeRequired)
                 {
-                    textBox2.Invoke(new Action(() => textBox2.Text = uuid));
+                    textBox_UUID.Invoke(new Action(() => textBox_UUID.Text = uuid));
                 }
                 else
                 {
-                    textBox2.Text = uuid;
+                    textBox_UUID.Text = uuid;
                 }
             }
         }
 
-        private async void button1_Click(object sender, EventArgs e)
+        private async void getStatusbyUUIDButton_Click(object sender, EventArgs e)
         {
-            this.textBox13.Text = "";
+            this.textBoxStatusbyUUID.Text = "";
             if (ConstantMessage.MqttSubscription == false)
             {
                 await SubscribeResponse();
             }
 
-            var uuid = textBox10.Text.ToString();
+            var uuid = textBox_UUIDForStatus.Text.ToString();
             JObject json = new JObject
             {
                 ["messageCode"] = "updater.update.status",
@@ -363,9 +363,9 @@ namespace MqttTestApplicationForUpdater
             await MqttManager.PublishAsync("meldCX/updater/command", json.ToString());
         }
 
-        private async void button2_Click(object sender, EventArgs e)
+        private async void getInstalledPackageListButton_Click(object sender, EventArgs e)
         {
-            this.textBox14.Text = "";
+            this.textBoxPackageResponse.Text = "";
 
             if (ConstantMessage.MqttSubscription == false)
             {
@@ -377,8 +377,7 @@ namespace MqttTestApplicationForUpdater
                 ["messageCode"] = "updater.package.list",
                 ["data"] = new JObject
                 {
-                    ["packages"] = JArray.Parse(textBox12.Text.ToString()),
-                    ["deviceid"] = textBox15.Text.ToString()
+                    ["packages"] = JArray.Parse(textBoxPackages.Text.ToString()),
                 }
             };
             await MqttManager.PublishAsync("meldCX/updater/command", json.ToString());
@@ -387,15 +386,15 @@ namespace MqttTestApplicationForUpdater
         public void OnLogReceived(string topic, string message)
         {
             var json = JObject.Parse(message);
-            var previousText = textBox11.Text;
+            var previousText = textBoxGeneralLog.Text;
             var newText = previousText + Environment.NewLine + json.ToString();
-            if (textBox11.InvokeRequired)
+            if (textBoxGeneralLog.InvokeRequired)
             {
-                textBox11.Invoke(new Action(() => textBox11.Text = newText));
+                textBoxGeneralLog.Invoke(new Action(() => textBoxGeneralLog.Text = newText));
             }
             else
             {
-                textBox11.Text = newText;
+                textBoxGeneralLog.Text = newText;
             }
         }
     }

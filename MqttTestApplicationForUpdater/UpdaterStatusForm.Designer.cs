@@ -30,35 +30,34 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.textBox11 = new System.Windows.Forms.TextBox();
+            this.textBoxGeneralLog = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.textBoxRealTimeProgress = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.textBox13 = new System.Windows.Forms.TextBox();
+            this.textBoxStatusbyUUID = new System.Windows.Forms.TextBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.textBox14 = new System.Windows.Forms.TextBox();
+            this.textBoxPackageResponse = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.mqttStatusLabel = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
+            this.getInstalledPackageListButton = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.textBox8 = new System.Windows.Forms.TextBox();
             this.textBox7 = new System.Windows.Forms.TextBox();
             this.textBox6 = new System.Windows.Forms.TextBox();
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.textBox4 = new System.Windows.Forms.TextBox();
-            this.textBox12 = new System.Windows.Forms.TextBox();
+            this.textBoxPackages = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.textBox10 = new System.Windows.Forms.TextBox();
-            this.textBox9 = new System.Windows.Forms.TextBox();
+            this.getStatusbyUUIDButton = new System.Windows.Forms.Button();
+            this.textBox_UUIDForStatus = new System.Windows.Forms.TextBox();
+            this.textBoxOverallStatus = new System.Windows.Forms.TextBox();
             this.confirmButton = new System.Windows.Forms.Button();
             this.tokenSetButton = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox15 = new System.Windows.Forms.TextBox();
+            this.textBox_UUID = new System.Windows.Forms.TextBox();
+            this.textBox_Token = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -81,7 +80,7 @@
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.textBox11);
+            this.tabPage1.Controls.Add(this.textBoxGeneralLog);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -90,19 +89,19 @@
             this.tabPage1.Text = "General Log";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // textBox11
+            // textBoxGeneralLog
             // 
-            this.textBox11.Location = new System.Drawing.Point(2, 2);
-            this.textBox11.Margin = new System.Windows.Forms.Padding(2);
-            this.textBox11.Multiline = true;
-            this.textBox11.Name = "textBox11";
-            this.textBox11.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox11.Size = new System.Drawing.Size(498, 777);
-            this.textBox11.TabIndex = 24;
+            this.textBoxGeneralLog.Location = new System.Drawing.Point(2, 2);
+            this.textBoxGeneralLog.Margin = new System.Windows.Forms.Padding(2);
+            this.textBoxGeneralLog.Multiline = true;
+            this.textBoxGeneralLog.Name = "textBoxGeneralLog";
+            this.textBoxGeneralLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxGeneralLog.Size = new System.Drawing.Size(498, 777);
+            this.textBoxGeneralLog.TabIndex = 24;
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.textBox3);
+            this.tabPage2.Controls.Add(this.textBoxRealTimeProgress);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -111,19 +110,19 @@
             this.tabPage2.Text = "Current Update Status";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // textBox3
+            // textBoxRealTimeProgress
             // 
-            this.textBox3.Font = new System.Drawing.Font("Calibri", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox3.Location = new System.Drawing.Point(0, 0);
-            this.textBox3.Multiline = true;
-            this.textBox3.Name = "textBox3";
-            this.textBox3.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox3.Size = new System.Drawing.Size(499, 778);
-            this.textBox3.TabIndex = 7;
+            this.textBoxRealTimeProgress.Font = new System.Drawing.Font("Calibri", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxRealTimeProgress.Location = new System.Drawing.Point(0, 0);
+            this.textBoxRealTimeProgress.Multiline = true;
+            this.textBoxRealTimeProgress.Name = "textBoxRealTimeProgress";
+            this.textBoxRealTimeProgress.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxRealTimeProgress.Size = new System.Drawing.Size(499, 778);
+            this.textBoxRealTimeProgress.TabIndex = 7;
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.textBox13);
+            this.tabPage3.Controls.Add(this.textBoxStatusbyUUID);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
@@ -132,19 +131,19 @@
             this.tabPage3.Text = "Status by UUID";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // textBox13
+            // textBoxStatusbyUUID
             // 
-            this.textBox13.Font = new System.Drawing.Font("Calibri", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox13.Location = new System.Drawing.Point(0, 0);
-            this.textBox13.Multiline = true;
-            this.textBox13.Name = "textBox13";
-            this.textBox13.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox13.Size = new System.Drawing.Size(502, 778);
-            this.textBox13.TabIndex = 26;
+            this.textBoxStatusbyUUID.Font = new System.Drawing.Font("Calibri", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxStatusbyUUID.Location = new System.Drawing.Point(0, 0);
+            this.textBoxStatusbyUUID.Multiline = true;
+            this.textBoxStatusbyUUID.Name = "textBoxStatusbyUUID";
+            this.textBoxStatusbyUUID.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxStatusbyUUID.Size = new System.Drawing.Size(502, 778);
+            this.textBoxStatusbyUUID.TabIndex = 26;
             // 
             // tabPage4
             // 
-            this.tabPage4.Controls.Add(this.textBox14);
+            this.tabPage4.Controls.Add(this.textBoxPackageResponse);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
@@ -153,22 +152,22 @@
             this.tabPage4.Text = "Installed Package Version";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
-            // textBox14
+            // textBoxPackageResponse
             // 
-            this.textBox14.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox14.Location = new System.Drawing.Point(0, 2);
-            this.textBox14.Margin = new System.Windows.Forms.Padding(2);
-            this.textBox14.Multiline = true;
-            this.textBox14.Name = "textBox14";
-            this.textBox14.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox14.Size = new System.Drawing.Size(500, 779);
-            this.textBox14.TabIndex = 44;
+            this.textBoxPackageResponse.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxPackageResponse.Location = new System.Drawing.Point(0, 2);
+            this.textBoxPackageResponse.Margin = new System.Windows.Forms.Padding(2);
+            this.textBoxPackageResponse.Multiline = true;
+            this.textBoxPackageResponse.Name = "textBoxPackageResponse";
+            this.textBoxPackageResponse.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxPackageResponse.Size = new System.Drawing.Size(500, 779);
+            this.textBoxPackageResponse.TabIndex = 44;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(598, 15);
+            this.label5.Location = new System.Drawing.Point(521, 9);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(88, 16);
             this.label5.TabIndex = 43;
@@ -179,7 +178,7 @@
             this.mqttStatusLabel.AutoSize = true;
             this.mqttStatusLabel.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.mqttStatusLabel.ForeColor = System.Drawing.Color.Red;
-            this.mqttStatusLabel.Location = new System.Drawing.Point(692, 15);
+            this.mqttStatusLabel.Location = new System.Drawing.Point(615, 9);
             this.mqttStatusLabel.Name = "mqttStatusLabel";
             this.mqttStatusLabel.Size = new System.Drawing.Size(106, 18);
             this.mqttStatusLabel.TabIndex = 42;
@@ -188,21 +187,21 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(516, 239);
+            this.label4.Location = new System.Drawing.Point(516, 269);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(150, 13);
             this.label4.TabIndex = 41;
             this.label4.Text = "Get Installed Package Version";
             // 
-            // button2
+            // getInstalledPackageListButton
             // 
-            this.button2.Location = new System.Drawing.Point(841, 273);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(121, 40);
-            this.button2.TabIndex = 40;
-            this.button2.Text = "Get Installed Package Version";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.getInstalledPackageListButton.Location = new System.Drawing.Point(841, 303);
+            this.getInstalledPackageListButton.Name = "getInstalledPackageListButton";
+            this.getInstalledPackageListButton.Size = new System.Drawing.Size(121, 40);
+            this.getInstalledPackageListButton.TabIndex = 40;
+            this.getInstalledPackageListButton.Text = "Get Installed Package Version";
+            this.getInstalledPackageListButton.UseVisualStyleBackColor = true;
+            this.getInstalledPackageListButton.Click += new System.EventHandler(this.getInstalledPackageListButton_Click);
             // 
             // panel1
             // 
@@ -252,58 +251,58 @@
             this.textBox4.Size = new System.Drawing.Size(371, 20);
             this.textBox4.TabIndex = 7;
             // 
-            // textBox12
+            // textBoxPackages
             // 
-            this.textBox12.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox12.Location = new System.Drawing.Point(517, 257);
-            this.textBox12.Margin = new System.Windows.Forms.Padding(2);
-            this.textBox12.Multiline = true;
-            this.textBox12.Name = "textBox12";
-            this.textBox12.Size = new System.Drawing.Size(302, 68);
-            this.textBox12.TabIndex = 38;
+            this.textBoxPackages.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxPackages.Location = new System.Drawing.Point(517, 287);
+            this.textBoxPackages.Margin = new System.Windows.Forms.Padding(2);
+            this.textBoxPackages.Multiline = true;
+            this.textBoxPackages.Name = "textBoxPackages";
+            this.textBoxPackages.Size = new System.Drawing.Size(302, 68);
+            this.textBoxPackages.TabIndex = 38;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(515, 153);
+            this.label3.Location = new System.Drawing.Point(515, 183);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(122, 13);
             this.label3.TabIndex = 37;
             this.label3.Text = "Updater Status by UUID";
             // 
-            // button1
+            // getStatusbyUUIDButton
             // 
-            this.button1.Location = new System.Drawing.Point(841, 172);
-            this.button1.Margin = new System.Windows.Forms.Padding(2);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(121, 40);
-            this.button1.TabIndex = 36;
-            this.button1.Text = "Get Status By UUID";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.getStatusbyUUIDButton.Location = new System.Drawing.Point(841, 202);
+            this.getStatusbyUUIDButton.Margin = new System.Windows.Forms.Padding(2);
+            this.getStatusbyUUIDButton.Name = "getStatusbyUUIDButton";
+            this.getStatusbyUUIDButton.Size = new System.Drawing.Size(121, 40);
+            this.getStatusbyUUIDButton.TabIndex = 36;
+            this.getStatusbyUUIDButton.Text = "Get Status By UUID";
+            this.getStatusbyUUIDButton.UseVisualStyleBackColor = true;
+            this.getStatusbyUUIDButton.Click += new System.EventHandler(this.getStatusbyUUIDButton_Click);
             // 
-            // textBox10
+            // textBox_UUIDForStatus
             // 
-            this.textBox10.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox10.Location = new System.Drawing.Point(517, 172);
-            this.textBox10.Margin = new System.Windows.Forms.Padding(2);
-            this.textBox10.Multiline = true;
-            this.textBox10.Name = "textBox10";
-            this.textBox10.Size = new System.Drawing.Size(302, 41);
-            this.textBox10.TabIndex = 35;
+            this.textBox_UUIDForStatus.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox_UUIDForStatus.Location = new System.Drawing.Point(517, 202);
+            this.textBox_UUIDForStatus.Margin = new System.Windows.Forms.Padding(2);
+            this.textBox_UUIDForStatus.Multiline = true;
+            this.textBox_UUIDForStatus.Name = "textBox_UUIDForStatus";
+            this.textBox_UUIDForStatus.Size = new System.Drawing.Size(302, 41);
+            this.textBox_UUIDForStatus.TabIndex = 35;
             // 
-            // textBox9
+            // textBoxOverallStatus
             // 
-            this.textBox9.Location = new System.Drawing.Point(518, 499);
-            this.textBox9.Multiline = true;
-            this.textBox9.Name = "textBox9";
-            this.textBox9.Size = new System.Drawing.Size(371, 38);
-            this.textBox9.TabIndex = 34;
+            this.textBoxOverallStatus.Location = new System.Drawing.Point(518, 499);
+            this.textBoxOverallStatus.Multiline = true;
+            this.textBoxOverallStatus.Name = "textBoxOverallStatus";
+            this.textBoxOverallStatus.Size = new System.Drawing.Size(371, 38);
+            this.textBoxOverallStatus.TabIndex = 34;
             // 
             // confirmButton
             // 
-            this.confirmButton.Location = new System.Drawing.Point(841, 103);
+            this.confirmButton.Location = new System.Drawing.Point(841, 133);
             this.confirmButton.Name = "confirmButton";
             this.confirmButton.Size = new System.Drawing.Size(121, 40);
             this.confirmButton.TabIndex = 33;
@@ -313,7 +312,7 @@
             // 
             // tokenSetButton
             // 
-            this.tokenSetButton.Location = new System.Drawing.Point(841, 35);
+            this.tokenSetButton.Location = new System.Drawing.Point(841, 65);
             this.tokenSetButton.Name = "tokenSetButton";
             this.tokenSetButton.Size = new System.Drawing.Size(121, 40);
             this.tokenSetButton.TabIndex = 32;
@@ -324,7 +323,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(515, 87);
+            this.label2.Location = new System.Drawing.Point(515, 117);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(110, 13);
             this.label2.TabIndex = 31;
@@ -333,60 +332,51 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(521, 15);
+            this.label1.Location = new System.Drawing.Point(520, 39);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(63, 13);
             this.label1.TabIndex = 30;
             this.label1.Text = "Auth Token";
             // 
-            // textBox2
+            // textBox_UUID
             // 
-            this.textBox2.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox2.Location = new System.Drawing.Point(517, 103);
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(302, 39);
-            this.textBox2.TabIndex = 29;
+            this.textBox_UUID.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox_UUID.Location = new System.Drawing.Point(517, 133);
+            this.textBox_UUID.Multiline = true;
+            this.textBox_UUID.Name = "textBox_UUID";
+            this.textBox_UUID.Size = new System.Drawing.Size(302, 39);
+            this.textBox_UUID.TabIndex = 29;
             // 
-            // textBox1
+            // textBox_Token
             // 
-            this.textBox1.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(517, 35);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(302, 40);
-            this.textBox1.TabIndex = 28;
-            // 
-            // textBox15
-            // 
-            this.textBox15.Location = new System.Drawing.Point(517, 357);
-            this.textBox15.Name = "textBox15";
-            this.textBox15.Size = new System.Drawing.Size(302, 20);
-            this.textBox15.TabIndex = 44;
-            this.textBox15.Text = "DeviceID";
+            this.textBox_Token.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox_Token.Location = new System.Drawing.Point(517, 65);
+            this.textBox_Token.Multiline = true;
+            this.textBox_Token.Name = "textBox_Token";
+            this.textBox_Token.Size = new System.Drawing.Size(302, 40);
+            this.textBox_Token.TabIndex = 28;
             // 
             // UpdaterStatusForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1130, 814);
-            this.Controls.Add(this.textBox15);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.mqttStatusLabel);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.getInstalledPackageListButton);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.textBox12);
+            this.Controls.Add(this.textBoxPackages);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.textBox10);
-            this.Controls.Add(this.textBox9);
+            this.Controls.Add(this.getStatusbyUUIDButton);
+            this.Controls.Add(this.textBox_UUIDForStatus);
+            this.Controls.Add(this.textBoxOverallStatus);
             this.Controls.Add(this.confirmButton);
             this.Controls.Add(this.tokenSetButton);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.textBox_UUID);
+            this.Controls.Add(this.textBox_Token);
             this.Controls.Add(this.tabControl1);
             this.Name = "UpdaterStatusForm";
             this.Text = "UpdaterStatusForm";
@@ -412,33 +402,32 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.TextBox textBox11;
-        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox textBoxGeneralLog;
+        private System.Windows.Forms.TextBox textBoxRealTimeProgress;
         private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.TextBox textBox13;
-        private System.Windows.Forms.TextBox textBox14;
+        private System.Windows.Forms.TextBox textBoxStatusbyUUID;
+        private System.Windows.Forms.TextBox textBoxPackageResponse;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label mqttStatusLabel;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button getInstalledPackageListButton;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.TextBox textBox8;
         private System.Windows.Forms.TextBox textBox7;
         private System.Windows.Forms.TextBox textBox6;
         private System.Windows.Forms.TextBox textBox5;
         private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.TextBox textBox12;
+        private System.Windows.Forms.TextBox textBoxPackages;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox textBox10;
-        private System.Windows.Forms.TextBox textBox9;
+        private System.Windows.Forms.Button getStatusbyUUIDButton;
+        private System.Windows.Forms.TextBox textBox_UUIDForStatus;
+        private System.Windows.Forms.TextBox textBoxOverallStatus;
         private System.Windows.Forms.Button confirmButton;
         private System.Windows.Forms.Button tokenSetButton;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBox_UUID;
+        private System.Windows.Forms.TextBox textBox_Token;
         private System.Windows.Forms.TabPage tabPage4;
-        private System.Windows.Forms.TextBox textBox15;
     }
 }
