@@ -31,7 +31,7 @@ namespace MqttTestApplicationForUpdater
             statusUpdateTimer.Start();
         }
 
-        private async void NewForm_Load(object sender, EventArgs e)
+        private async void UpdaterStatusForm_Load(object sender, EventArgs e)
         {
             // Load icon from file path (replace "your-icon.ico" with your actual filename)
             try

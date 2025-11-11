@@ -380,7 +380,7 @@
             this.Controls.Add(this.tabControl1);
             this.Name = "UpdaterStatusForm";
             this.Text = "UpdaterStatusForm";
-            this.Load += new System.EventHandler(this.NewForm_Load);
+            this.Load += new System.EventHandler(this.UpdaterStatusForm_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
