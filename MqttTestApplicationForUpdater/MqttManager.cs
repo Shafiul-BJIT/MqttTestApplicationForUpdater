@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Configuration;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
+using System.IO;
 using MQTTnet;
 using MQTTnet.Client;
 
@@ -26,12 +27,64 @@ namespace MqttTestApplicationForUpdater
 
         static MqttManager()
         {
-            _brokerHost = "192.168.54.241";
-            _brokerPort = 8883;
-            _username = "sdkmeldcx";
-            _password = "SDKmeldCX";
+            var config = ReadAppConfig();
+            
+            _brokerHost = config.TryGetValue("MQTT_BrokerHost", out string brokerHost) ? brokerHost : ConstantMessage.DefaultBrokerHost;
+            
+            if (!config.TryGetValue("MQTT_BrokerPort", out string portString) || !int.TryParse(portString, out _brokerPort))
+            {
+                _brokerPort = ConstantMessage.DefaultBrokerPort;
+            }
+            
+            _username = config.TryGetValue("MQTT_Username", out string username) ? username : ConstantMessage.DefaultUsername;
+            _password = config.TryGetValue("MQTT_Password", out string password) ? password : ConstantMessage.DefaultPassword;
+            
             _clientId = $"UpdaterService_{Environment.MachineName}_{Guid.NewGuid()}";
             _messageHandlers = new Dictionary<string, Action<string, string>>();
+        }
+
+        private static Dictionary<string, string> ReadAppConfig()
+        {
+            var settings = new Dictionary<string, string>();
+            
+            try
+            {
+                string configPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "App.config");
+                if (!File.Exists(configPath))
+                {
+                    // Try the executable config file name
+                    configPath = AppDomain.CurrentDomain.SetupInformation.ConfigurationFile;
+                }
+
+                if (File.Exists(configPath))
+                {
+                    var doc = new XmlDocument();
+                    doc.Load(configPath);
+
+                    var appSettingsNode = doc.SelectSingleNode("//appSettings");
+                    if (appSettingsNode != null)
+                    {
+                        foreach (XmlNode node in appSettingsNode.ChildNodes)
+                        {
+                            if (node.NodeType == XmlNodeType.Element && node.Name == "add")
+                            {
+                                var keyAttr = node.Attributes["key"];
+                                var valueAttr = node.Attributes["value"];
+                                if (keyAttr != null && valueAttr != null)
+                                {
+                                    settings[keyAttr.Value] = valueAttr.Value;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error reading config file: {ex.Message}");
+            }
+
+            return settings;
         }
 
         public static async Task<bool> ConnectAsync()
